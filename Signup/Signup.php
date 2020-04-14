@@ -14,6 +14,8 @@
     $connessione = new mysqli("remotemysql.com:3306","vlIGVKqVUg","R6OA2FGr12","vlIGVKqVUg");  
     $sql = "SELECT Username FROM ViaggiaConNoi WHERE Username=$username";
     $result = mysqli_query($connessione,$sql);
+    echo mysqli_num_rows($result);
+    echo $result;
     if (mysqli_num_rows($result) == 0) {
       exit("Username già registrato!");
     }
