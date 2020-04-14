@@ -22,7 +22,7 @@
   }
     if ($result->num_rows > 0){
       echo("Username già registrato!");
-      exit('<br><br><a class ="btn btn-primary" href="../Login/LoginPage.html"> Prova ad Accedere </button>');
+      exit('<br><br><a class ="btn btn-primary" href="../Login/LoginPage.html"> Prova ad Accedere </a>');
     }
     $sql = "INSERT INTO ViaggiaConNoi (Username, Password, Email) VALUES ('$username', '$password', '$email')";
             
