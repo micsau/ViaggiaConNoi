@@ -1,5 +1,5 @@
 <?php 
-    $destinazione = $_POST["Destinazione"];
+    $Destinazione = $_POST["Destinazione"];
     $connessione = new mysqli("remotemysql.com:3306","vlIGVKqVUg","R6OA2FGr12","vlIGVKqVUg");  
     $sql = "SELECT Destinazione FROM ViaggiaConNoiLista WHERE Destinazione='$Destinazione'";
     $result = $connessione->query($sql);
