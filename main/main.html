@@ -8,12 +8,14 @@
     <link rel="icon" href="../../../../favicon.ico">
 
     <title>ViaggiaConNoi</title>
-
-
-    <link href="../../../../dist/css/bootstrap.min.css" rel="stylesheet">
-
-
     <link href="album.css" rel="stylesheet">
+    <style>
+      .map-container{
+        width:45%; 
+        height: 70%;
+        box-shadow: 1px 2px 4px rgba(0, 0, 0, .5); 
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -61,17 +63,34 @@
           </p>
         </div>
       </section>
-      <html><body>
-        <div id="demoMap"></div>
-        <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-        <script>
+      <div class="container-fluid">
+        <div class="map-container">
+          <div style="padding-left: 5vh;" id="demoMap"></div>
+        </div>
+      </div>
+      <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+      <script>
+          let lat = 45.5257;
+          let lon = 10.2283;
+          let zoom = 10;
+
+          let fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
+          let toProjection = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
+          let position = new OpenLayers.LonLat(lon, lat).transform( fromProjection, toProjection);
           map = new OpenLayers.Map("demoMap");
-          map.addLayer(new OpenLayers.Layer.OSM());
-          map.zoomToMaxExtent();
-        </script>
-      </body></html>
+          let mapnik = new OpenLayers.Layer.OSM();
+          map.addLayer(mapnik);
+          map.setCenter(position, zoom);
+          postition = navigator.geolocation.getCurrentPosition(function(posit){
+            position = new OpenLayers.LonLat(posit.coords.longitude || lon, posit.coords.latitude || lat).transform(fromProjection, toProjection);
+            let markers = new OpenLayers.Layer.Markers("Markers");
+            map.addLayer(markers);
+            markers.addMarker(new OpenLayers.Marker(position));
+            map.setCenter(position, zoom);
+          })
+      </script>
     </main>
-    <footer class="text-muted">
+    <footer class="text-muted" style="padding-top: 5vh;">
       <div class="container">
         <p class="float-right">
           <a href="#">Torna in Cima</a>
@@ -79,11 +98,6 @@
         <p>ViaggiaConNoi creata da Michele Saulle, per bug e altri problemi contattatelo a michelesaulle98@gmail.com</p>
       </div>
     </footer>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="../../../../assets/js/vendor/popper.min.js"></script>
-    <script src="../../../../dist/js/bootstrap.min.js"></script>
-    <script src="../../../../assets/js/vendor/holder.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
