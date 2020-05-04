@@ -69,94 +69,107 @@
               $connessione = new mysqli("remotemysql.com:3306","vlIGVKqVUg","R6OA2FGr12","vlIGVKqVUg");
               $sql = "SELECT * FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk";
               $result = $connessione->query($sql);
-              if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                  $citta=$row['citta'];
-                  $prezzo=$row['prezzo'];
-                  $notti=$row['notti'];
-                  $descrizione=$row['descrizione'];
-                  //$url_immagine=$row['url'];
-                  print_r($row);
+              $cardsData = formatCardsResult($result);
+              $carouselId = 0;
+              foreach($cardsData as $card) {
+                $citta = $card['citta'];
+                $descrizione = $card['descrizione'];
+                $urls = $card['urls'];
+                $images = array();
+                $isFirstUrl = true;
+                foreach($urls as $url){
+                  $divClass = $isFirstUrl? "carousel-item active" : "carousel-item";
+                  $div = '
+                    <div class="'.$divClass.'" data-interval="5000">
+                      <img src="'.$url.'" class="d-block w-100">
+                    </div>
+                  ';
+                  array_push($images, $div);
+                  $isFirstUrl = false;
+                }
+                $cards = '
+                  <div class="col-md-4">
+                    <h5 class="card-title">'.$citta.'</h5>
+                    <div class="card mb-4 box-shadow">
+                      <div id="destImagesCarousel'.$carouselId.'" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">'
+                          . implode($images) .
+                        '</div>
+                        <a class="carousel-control-prev" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>
+                      <div class="card-body">
+                        <p class="card-text">'.$descrizione.'</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <div class="btn-group">
+                            <form action="Login/LoginPage.php" method="POST">
+                              <button type="submit" class="btn btn-outline-secondary">Visualizza</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ';
+                $carouselId++;
+                echo($cards);
+              }
+
+              function formatCardsResult($result){
+                $cardsData = array();
+                $rows = array();
+                while($row=$result->fetch_assoc()){
+                  $rowData = array(
+                    'id' => $row['id'], 
+                    'citta' => $row['citta'],  
+                    'notti' => $row['notti'],
+                    'descrizione' => $row['descrizione'],  
+                    'id_dest_fk' => $row['id_dest_fk'], 
+                    'urls' => array($row['url'])
+                  );
+                  array_push($rows, $rowData);
+                }
+                usort($rows, function($a, $b) {
+                  if ($a['id_dest_fk'] == $b['id_dest_fk']) {
+                    return 0;
+                  }
+                  return ($a['id_dest_fk'] < $b['id_dest_fk']) ? -1 : 1;
+                });
+                foreach($rows as $row){
+                  $exists = exists($cardsData, 'id_dest_fk', $row['id_dest_fk']);
+                  if($exists){
+                    array_push($cardsData[indexOf($cardsData, 'id_dest_fk', $row['id_dest_fk'])]['urls'], $row['urls'][0]);
+                  }else{
+                    array_push($cardsData, $row);
+                  }
+                }
+                return $cardsData;
+              }
+              function exists($array, $key, $value){
+                foreach($array as $data){
+                  if($data[$key] == $value){
+                    return true;
+                  }
+                }
+                return false;
+              }
+              function indexOf($array, $key, $value){
+                for($i = 0; $i < sizeof($array); $i++){
+                  if($array[$i][$key] == $value){
+                    return $i;
+                  }
                 }
               }
-                  // $cards = '
-                  // <div class="col-md-4">
-                  //   <h5 class="card-title">'.$citta.'</h5>
-                  //   <div class="card mb-4 box-shadow">
-                  //     <img src="'.$url_immagine.'" width="348" height="159">
-                  //     <div class="card-body">
-                  //       <p class="card-text">$descrizione</p>
-                  //       <div class="d-flex justify-content-between align-items-center">
-                  //         <div class="btn-group">
-                  //           <form action="Login/LoginPage.php" method="POST">
-                  //             <button type="submit" class="btn btn-outline-secondary">Visualizza</button>
-                  //           </form>
-                  //         </div>
-                  //       </div>
-                  //     </div>
-                  //   </div>
-                  // </div>
-                  // ';
-                  // echo $cards;
-                  // echo $citta;
-                  // echo $prezzo;
-                  // echo $notti;
-                  // echo $descrizione;
-                  // echo $url_immagine;
-              
             ?>
-
-            <!-- <div class="col-md-4">
-              <h5 class="card-title">Roma</h5>
-              <div class="card mb-4 box-shadow">
-                <img src="https://viaggiaconnoiimages.s3-eu-west-1.amazonaws.com/Roma.jpg" width="348" height="159">
-                <div class="card-body">
-                  <p class="card-text">Viaggio per Roma a Partire da 25 Euro</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <form action="Login/LoginPage.php" method="POST">
-                        <button type="submit" class="btn btn-outline-secondary">Visualizza</button>
-                    </form>
-                    </div>
-                    <small class="text-muted">20 min</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <h5 class="card-title">Amsterdam</h5>
-              <div class="card mb-4 box-shadow">
-                <img src="https://viaggiaconnoiimages.s3-eu-west-1.amazonaws.com/Amsterdam.jpg" width="348" height="159">
-                <div class="card-body">
-                  <p class="card-text">Guarda draghi e sballati come non mai ad Amsterdam per 75 euro a persona</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <form action="Login/LoginPage.php" method="POST">
-                        <button type="submit" class="btn btn-outline-secondary">Visualizza</button>
-                    </form>
-                    </div>
-                    <small class="text-muted">1 ora fa</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <h5 class="card-title">Parigi</h5>
-              <div class="card mb-4 box-shadow">
-                <img src="https://viaggiaconnoiimages.s3-eu-west-1.amazonaws.com/Parigi.jpg" width="348" height="159">
-                <div class="card-body">
-                  <p class="card-text">Una volta ogni tanto fai felice la tua ragazza e portala a Parigi per 55 euro a persona!!</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <form action="Login/LoginPage.php" method="POST">
-                        <button type="submit" class="btn btn-outline-secondary">Visualizza</button>
-                    </form>
-                    </div>
-                    <small class="text-muted">2 giorni fa</small>
-                  </div>
-                </div>
-              </div>
-            </div> -->
+          </div>
+        </div>
+      </div>
     </main>
     <footer class="text-muted">
       <div class="container">
