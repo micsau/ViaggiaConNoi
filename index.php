@@ -65,7 +65,48 @@
       <div class="album py-5 bg-light">
         <div class="container">
           <div class="row">
-            <div class="col-md-4">
+            <?php
+              $connessione = new mysqli("remotemysql.com:3306","vlIGVKqVUg","R6OA2FGr12","vlIGVKqVUg");
+              $sql = "SELECT * FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk";
+              $result = $connessione->query($sql);
+              if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                  $citta=$row['citta'];
+                  $prezzo=$row['prezzo'];
+                  $notti=$row['notti'];
+                  $descrizione=$row['descrizione'];
+                  //$url_immagine=$row['url'];
+                  print_r($row);
+                }
+              }
+                  // $cards = '
+                  // <div class="col-md-4">
+                  //   <h5 class="card-title">'.$citta.'</h5>
+                  //   <div class="card mb-4 box-shadow">
+                  //     <img src="'.$url_immagine.'" width="348" height="159">
+                  //     <div class="card-body">
+                  //       <p class="card-text">$descrizione</p>
+                  //       <div class="d-flex justify-content-between align-items-center">
+                  //         <div class="btn-group">
+                  //           <form action="Login/LoginPage.php" method="POST">
+                  //             <button type="submit" class="btn btn-outline-secondary">Visualizza</button>
+                  //           </form>
+                  //         </div>
+                  //       </div>
+                  //     </div>
+                  //   </div>
+                  // </div>
+                  // ';
+                  // echo $cards;
+                  // echo $citta;
+                  // echo $prezzo;
+                  // echo $notti;
+                  // echo $descrizione;
+                  // echo $url_immagine;
+              
+            ?>
+
+            <!-- <div class="col-md-4">
               <h5 class="card-title">Roma</h5>
               <div class="card mb-4 box-shadow">
                 <img src="https://viaggiaconnoiimages.s3-eu-west-1.amazonaws.com/Roma.jpg" width="348" height="159">
@@ -115,7 +156,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
     </main>
     <footer class="text-muted">
       <div class="container">

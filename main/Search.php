@@ -1,7 +1,7 @@
 <?php 
     $Destinazione = $_POST["Destinazione"];
     $connessione = new mysqli("remotemysql.com:3306","vlIGVKqVUg","R6OA2FGr12","vlIGVKqVUg");  
-    $sql = "SELECT Destinazione FROM ViaggiaConNoiLista WHERE Destinazione='$Destinazione'";
+    $sql = "SELECT * FROM Destinazioni WHERE Destinazione='$Destinazione'";
     $result = $connessione->query($sql);
     if (!$result) {
       trigger_error('Invalid query: ' . $connessione->error);

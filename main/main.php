@@ -57,8 +57,8 @@
       <section class="jumbotron text-center">
         <div class="container">
           <h1 class="jumbotron-heading">Seleziona la tua destinazione</h1>
-          <form action="Search.php" class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <form action="main.php" class="form-inline my-2 my-lg-0">
+            <input name="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
           </p>
@@ -72,7 +72,19 @@
             </div>
           </div>
           <div class="col">
-            <h1>Prova</h1>
+            <?php 
+              
+              $connessione = new mysqli("remotemysql.com:3306","vlIGVKqVUg","R6OA2FGr12","vlIGVKqVUg");  
+              $sql = "SELECT Destinazione FROM ViaggiaConNoiLista WHERE Destinazione='$Destinazione'";
+              $result = $connessione->query($sql);
+              if (!$result) {
+                trigger_error('Invalid query: ' . $connessione->error);
+              }
+              if ($result->num_rows > 0){
+                echo("Siamo Spiacenti ma non è disponibile nessun viaggio per quella destinazione");
+              }
+              mysqli_close($connessione);
+            ?>
           </div>
         </div>
       </div>
