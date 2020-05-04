@@ -11,8 +11,6 @@
     <link href="album.css" rel="stylesheet">
     <style>
       .map-container{
-        width:45%; 
-        height: 70%;
         box-shadow: 1px 2px 4px rgba(0, 0, 0, .5); 
       }
     </style>
@@ -67,8 +65,15 @@
         </div>
       </section>
       <div class="container-fluid">
-        <div class="map-container">
-          <div style="padding-left: 5vh;" id="demoMap"></div>
+        <div class="row">
+          <div class="col" style="height: 70vh;">
+            <div class="map-container">
+              <div style="padding-left: 5vh;" id="demoMap"></div>
+            </div>
+          </div>
+          <div class="col">
+            <h1>Prova</h1>
+          </div>
         </div>
       </div>
       <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
