@@ -1,11 +1,17 @@
-<html>
+<!DOCTYPE html>
+<html lang="it">
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Viaggia Con Noi: divertiti viaggiando!">
+    <meta name="author" content="Michele Saulle">
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="../css/main.css">
     <title>Login</title>
   </head>
   <body>
@@ -61,17 +67,19 @@
           <div class="alert alert-danger">
             <?php
               session_start();         //funzione di login.
-              $username = $_POST["nome"];
+              $username = $_POST["username"];
               $password = $_POST["password"];       //prendo da input lo username e la password.
               if (!$username) {
                 echo("Inserisci un username per accedere!");
-                exit('<br><br><a class ="btn btn-primary" href="index.html"> Ritorna Indietro </a>');
+                exit('<br><br><a class ="btn btn-primary" href="index.html">Ritorna Indietro </a>');
               }
               if (!$password) {                                 // se non trova scritto user e pass da erore.
                 echo("Inserisci una password per accedere!");
-                exit('<br><br><a class ="btn btn-primary" href="index.html"> Ritorna Indietro </a>');
+                exit('<br><br><a class ="btn btn-primary" href="index.html">Ritorna Indietro </a>');
               }
-              $connessione = new mysqli("remotemysql.com:3306", "vlIGVKqVUg", "R6OA2FGr12", "vlIGVKqVUg"); //connessione al db.
+              $config = file_get_contents('../config.json');
+              $jConfig = json_decode($config, true);
+              $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
               $sql = "SELECT * FROM Users where username='$username' AND password='$password'";
               $result = $connessione->query($sql);   //eseguo la query.
               if ($result->num_rows > 0) {
@@ -84,8 +92,9 @@
               } else {
                 session_destroy();
                 echo("Username o Password errati, Riprova!");
-                exit('<br><br><a class ="btn btn-primary" href="index.html"> Ritorna Indietro </a>');
+                exit('<br><br><a class ="btn btn-primary" href="index.html">Ritorna Indietro </a>');
               }
+              $connessione->close();
             ?>
           </div>
         </div>
