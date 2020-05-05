@@ -84,7 +84,6 @@
                 }
                 $cards = '
                   <div class="col-md-4">
-                    <h5 class="card-title">'.$citta.'</h5>
                     <div class="card mb-4 box-shadow">
                       <div id="destImagesCarousel'.$carouselId.'" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">'
@@ -100,12 +99,11 @@
                         </a>
                       </div>
                       <div class="card-body">
+                        <h5 class="card-title">'.$citta.'</h5>
                         <p class="card-text">'.$descrizione.'</p>
                         <div class="d-flex justify-content-between align-items-center">
                           <div class="btn-group">
-                            <form action="Login/LoginPage.php" method="POST">
-                              <button type="submit" class="btn btn-outline-secondary">Visualizza</button>
-                            </form>
+                            <a href="login/index.html" class="btn btn-outline-secondary">Visualizza Offerta</a>
                           </div>
                         </div>
                       </div>

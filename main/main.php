@@ -55,38 +55,95 @@
       </div>
     </header>
     <main role="main">
-      <section class="jumbotron text-center">
-        <div class="container">
-          <h1 class="jumbotron-heading">Seleziona la tua destinazione</h1>
-          <form action="main.php" class="form-inline my-2 my-lg-0">
-            <input name="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
-          </p>
-        </div>
-      </section>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col" style="height: 70vh;">
+      <div class="container">
+        <div class="row pt-3">
+          <div class="col-6" style="height: 35vh;">
             <div class="map-container">
               <div style="padding-left: 5vh;" id="demoMap"></div>
             </div>
           </div>
-          <div class="col">
-            <?php 
-              
-              $connessione = new mysqli("remotemysql.com:3306","vlIGVKqVUg","R6OA2FGr12","vlIGVKqVUg");  
-              $sql = "SELECT Destinazione FROM ViaggiaConNoiLista WHERE Destinazione='$Destinazione'";
-              $result = $connessione->query($sql);
-              if (!$result) {
-                trigger_error('Invalid query: ' . $connessione->error);
-              }
-              if ($result->num_rows > 0){
-                echo("Siamo Spiacenti ma non è disponibile nessun viaggio per quella destinazione");
-              }
-              mysqli_close($connessione);
-            ?>
+          <div class="col-6">
+            <h2 class="pb-3">Seleziona la tua destinazione</h2>
+            <form action="main.php" method="POST">
+              <div class="container-fluid px-0">
+                <div class="row">
+                  <div class="col-8">
+                    <input name="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+                  </div>
+                  <div class="col-2">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                  </div>
+                  <div class="col-2">
+                    <a class="btn btn-outline-primary" href="/main/main.php">Refresh</a>
+                  </div>
+                </div>  
+              </div>
+            </form>
           </div>
+        </div>
+        <div class="row pt-3">
+          <?php 
+            require_once("../utils/utils.php");
+            $connessione = new mysqli("remotemysql.com:3306","vlIGVKqVUg","R6OA2FGr12","vlIGVKqVUg");  
+            if(empty($_POST) || !$_POST["search"]){
+              $sql = "SELECT * FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk";
+            }
+            else{
+              $citta = $_POST["search"];
+              $sql = "SELECT * FROM Destinazioni, Immagini WHERE citta='$citta' AND Destinazioni.id = Immagini.id_dest_fk";
+            }
+            $result = $connessione->query($sql);
+            $cardsData = formatCardsResult($result);
+            $carouselId = 0;
+            foreach($cardsData as $card) {
+              $citta = $card['citta'];
+              $descrizione = $card['descrizione'];
+              $urls = $card['urls'];
+              $images = array();
+              $isFirstUrl = true;
+              foreach($urls as $url){
+                $divClass = $isFirstUrl? "carousel-item active" : "carousel-item";
+                $div = '
+                  <div class="'.$divClass.'" data-interval="5000">
+                    <img src="'.$url.'" class="d-block w-100">
+                  </div>
+                ';
+                array_push($images, $div);
+                $isFirstUrl = false;
+              }
+              $cards = '
+              <div class="col-3">
+                <div class="card mb-4 box-shadow">
+                  <div id="destImagesCarousel'.$carouselId.'" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">'
+                      . implode($images) .
+                    '</div>
+                    <a class="carousel-control-prev" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">'.$citta.'</h5>
+                    <p class="card-text">'.$descrizione.'</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="btn-group">
+                        <a href="login/index.html" class="btn btn-outline-secondary">Visualizza Offerta</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              ';
+              $carouselId++;
+              echo($cards);
+            }
+            mysqli_close($connessione);
+          ?>
         </div>
       </div>
       <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
