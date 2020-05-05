@@ -19,12 +19,10 @@
               <p class="text-muted">ViaggiaConNoi startup innovativa per prenotare e viaggiare comodamente ed il risparmio è garantito</p>
             </div>
             <div class="col-sm-4 offset-md-1 py-4">
-              <h4 class="text-white">Come Contattarci</h4>
+              <h4 class="text-white">Contatti</h4>
               <ul class="list-unstyled">
                 <!-- aggiungere link veri -->
-                <li><a href="#" class="text-white">Seguici su Twitter</a></li>
-                <li><a href="#" class="text-white">Metti mi piace su Facebook</a></li>
-                <li><a href="#" class="text-white">Contattaci</a></li>
+                <li><a href="mailto:michelesaulle98@gmail.com" class="text-white">Tramite e-mail</a></li>
               </ul>
             </div>
           </div>
