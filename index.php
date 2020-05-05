@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
   <head>
+    <link rel="icon" type="image/png" href="assets/logo/logo-ico.png"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Viaggia Con Noi: divertiti viaggiando!">
@@ -21,7 +22,6 @@
             <div class="col-sm-4 offset-md-1 py-4">
               <h4 class="text-white">Contatti</h4>
               <ul class="list-unstyled">
-                <!-- aggiungere link veri -->
                 <li><a href="mailto:michelesaulle98@gmail.com" class="text-white">Tramite e-mail</a></li>
               </ul>
             </div>
@@ -31,8 +31,7 @@
       <div class="navbar navbar-dark bg-dark box-shadow">
         <div class="container d-flex justify-content-between">
           <a href="/" class="navbar-brand d-flex align-items-center">
-            <!-- QUI CI VA IL LOGO -->
-            <strong>ViaggiaConNoi</strong>
+            <img src="assets/logo/logo.png" width=100 height="100" alt="">
           </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
