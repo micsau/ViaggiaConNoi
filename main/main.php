@@ -94,7 +94,9 @@
             $carouselId = 0;
             foreach($cardsData as $card) {
               $citta = $card['citta'];
+              $id = $card['id'];
               $descrizione = $card['descrizione'];
+              $prezzo = $card['prezzo'];
               $urls = $card['urls'];
               $images = array();
               $isFirstUrl = true;
@@ -127,9 +129,13 @@
                   <div class="card-body">
                     <h5 class="card-title">'.$citta.'</h5>
                     <p class="card-text">'.$descrizione.'</p>
+                    <h6 class="card-subtitle mb-2 text-muted">'.$prezzo.' €/notte</h6>
                     <div class="d-flex justify-content-between align-items-center">
                       <div class="btn-group">
-                        <a href="login/index.html" class="btn btn-outline-secondary">Visualizza Offerta</a>
+                        <form action="buy/index.php" method=POST>
+                          <input type="hidden" name="id" value="'.$id.'">
+                            <button type="submit" class="btn btn-outline-secondary">Acquista</button>
+                        </form>
                       </div>
                     </div>
                   </div>

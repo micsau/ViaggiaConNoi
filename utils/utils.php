@@ -9,6 +9,7 @@ function formatCardsResult($result){
       'notti' => $row['notti'],
       'descrizione' => $row['descrizione'],  
       'id_dest_fk' => $row['id_dest_fk'], 
+      'prezzo' => $row['prezzo'],
       'urls' => array($row['url'])
     );
     array_push($rows, $rowData);
