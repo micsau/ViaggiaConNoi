@@ -104,8 +104,11 @@
                 ?>
                 </div>
                 <div class="col">
-                    <form>
+                    <form action="confirm/index.php" method="POST">
                         <h5 class="pb-3">Inserisci una mail valida e clicca su Acquista per procedere al pagamento, altrimenti clicca cancella</h5>
+                        <?php 
+                          echo "<input type='hidden' name='id_dest' value='$id'>";
+                        ?>
                         <input type="email" class="form-control" name="email" placeholder="Inserisci una mail" required>
                         <div class="btn-toolbar justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
                             <a href="/main/main.php" class="btn btn-outline-danger mt-3 mr-3">Cancella</a> 
