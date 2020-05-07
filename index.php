@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html lang="it">
   <head>
@@ -58,6 +61,14 @@
         <div class="container">
           <div class="row">
             <?php
+              if(isset($_SESSION) && sizeof($_SESSION) > 0){
+                ob_start();
+                header('Location: \main\main.php');
+                ob_end_flush();
+              }
+              else{
+                session_destroy();
+              }
               require_once('./utils/utils.php');
               $config = file_get_contents('./config.json');
               $jConfig = json_decode($config, true);

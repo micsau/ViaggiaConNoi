@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <html>    <!--ViaggiaConNoi-->
   <head>
     <link rel="icon" type="image/png" href="../assets/logo/logo-ico.png"/>

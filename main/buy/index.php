@@ -106,13 +106,12 @@
                 <div class="col">
                     <form>
                         <h5 class="pb-3">Inserisci una mail valida e clicca su Acquista per procedere al pagamento, altrimenti clicca cancella</h5>
-                        <input type="email" class="form-control" name="email" placeholder="Inserisci una mail">
+                        <input type="email" class="form-control" name="email" placeholder="Inserisci una mail" required>
                         <div class="btn-toolbar justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
                             <a href="/main/main.php" class="btn btn-outline-danger mt-3 mr-3">Cancella</a> 
                             <button type="submit" class="btn btn-primary mt-3">Acquista Ora</button> 
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
