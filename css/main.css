@@ -31,3 +31,7 @@ footer {
 footer p {
   margin-bottom: .25rem;
 }
+
+.map-container{
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5); 
+}

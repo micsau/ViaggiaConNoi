@@ -7,18 +7,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
+    <meta name="description" content="Viaggia Con Noi: divertiti viaggiando!">
+    <meta name="author" content="Michele Saulle">
     <link rel="stylesheet" href="../css/main.css">
-
     <title>ViaggiaConNoi</title>
-    <link href="album.css" rel="stylesheet">
-    <style>
-      .map-container{
-        box-shadow: 1px 2px 4px rgba(0, 0, 0, .5); 
-      }
-    </style>
   </head>
   <body>
     <header>
@@ -58,8 +50,8 @@
       <div class="container">
         <div class="row pt-3">
           <div class="col-6" style="height: 35vh;">
-            <div class="map-container">
-              <div style="padding-left: 5vh;" id="demoMap"></div>
+            <div style="box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);">
+              <div style="padding-left: 5vh; " id="demoMap"></div>
             </div>
           </div>
           <div class="col-6">
@@ -84,7 +76,9 @@
         <div class="row pt-3">
           <?php 
             require_once("../utils/utils.php");
-            $connessione = new mysqli("remotemysql.com:3306","vlIGVKqVUg","R6OA2FGr12","vlIGVKqVUg");  
+            $config = file_get_contents('../config.json');
+            $jConfig = json_decode($config, true);
+            $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
             if(empty($_POST) || !$_POST["search"]){
               $sql = "SELECT * FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk";
             }
@@ -114,36 +108,36 @@
                 $isFirstUrl = false;
               }
               $cards = '
-              <div class="col-3">
-                <div class="card mb-4 box-shadow">
-                  <div id="destImagesCarousel'.$carouselId.'" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">'
-                      . implode($images) .
-                    '</div>
-                    <a class="carousel-control-prev" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Next</span>
-                    </a>
-                  </div>
-                  <div class="card-body">
-                    <h5 class="card-title">'.$citta.'</h5>
-                    <p class="card-text">'.$descrizione.'</p>
-                    <h6 class="card-subtitle mb-2 text-muted">'.$prezzo.' €/notte</h6>
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div class="btn-group">
-                        <form action="buy/index.php" method=POST>
-                          <input type="hidden" name="id" value="'.$id.'">
-                            <button type="submit" class="btn btn-outline-secondary">Acquista</button>
-                        </form>
+                <div class="col-3">
+                  <div class="card mb-4 box-shadow">
+                    <div id="destImagesCarousel'.$carouselId.'" class="carousel slide" data-ride="carousel">
+                      <div class="carousel-inner">'
+                        . implode($images) .
+                      '</div>
+                      <a class="carousel-control-prev" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                      <a class="carousel-control-next" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">'.$citta.'</h5>
+                      <p class="card-text">'.$descrizione.'</p>
+                      <h6 class="card-subtitle mb-2 text-muted">'.$prezzo.' €/notte</h6>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                          <form action="buy/index.php" method=POST>
+                            <input type="hidden" name="id" value="'.$id.'">
+                              <button type="submit" class="btn btn-outline-secondary">Acquista</button>
+                          </form>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
               ';
               $carouselId++;
               echo($cards);

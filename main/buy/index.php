@@ -46,79 +46,81 @@
     </header>
     
     <main class="pt-3">
-        <div class="container">
-            <div class="row">
-                <div class="col-4">
-                <?php 
-                    require_once('../../utils/utils.php');
-                    $id = $_POST['id'];
-                    $connessione = new mysqli("remotemysql.com:3306","vlIGVKqVUg","R6OA2FGr12","vlIGVKqVUg");
-                    $sql = "SELECT * FROM Destinazioni, Immagini WHERE Destinazioni.id = '$id' AND Destinazioni.id = Immagini.id_dest_fk";
-                    $result = $connessione->query($sql);
-                    $cardsData = formatCardsResult($result);
-                    $carouselId = 0;
-                    foreach($cardsData as $card) {
-                    $citta = $card['citta'];
-                    $id = $card['id'];
-                    $descrizione = $card['descrizione'];
-                    $prezzo = $card['prezzo'];
-                    $urls = $card['urls'];
-                    $images = array();
-                    $isFirstUrl = true;
-                    foreach($urls as $url){
-                        $divClass = $isFirstUrl? "carousel-item active" : "carousel-item";
-                        $div = '
-                        <div class="'.$divClass.'" data-interval="5000">
-                            <img src="'.$url.'" class="d-block w-100">
-                        </div>
-                        ';
-                        array_push($images, $div);
-                        $isFirstUrl = false;
-                    }
-                    $cards = '
-                        <div class="card mb-4 box-shadow">
-                        <div id="destImagesCarousel'.$carouselId.'" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner">'
-                            . implode($images) .
-                            '</div>
-                            <a class="carousel-control-prev" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">'.$citta.'</h5>
-                            <p class="card-text">'.$descrizione.'</p>
-                            <h6 class="card-subtitle mb-2 text-muted">'.$prezzo.' €/notte</h6>
-                        </div>
-                        </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-4">
+            <?php 
+                require_once('../../utils/utils.php');
+                $id = $_POST['id'];
+                $config = file_get_contents('../../config.json');
+                $jConfig = json_decode($config, true);
+                $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
+                $sql = "SELECT * FROM Destinazioni, Immagini WHERE Destinazioni.id = '$id' AND Destinazioni.id = Immagini.id_dest_fk";
+                $result = $connessione->query($sql);
+                $cardsData = formatCardsResult($result);
+                $carouselId = 0;
+                foreach($cardsData as $card) {
+                  $citta = $card['citta'];
+                  $id = $card['id'];
+                  $descrizione = $card['descrizione'];
+                  $prezzo = $card['prezzo'];
+                  $urls = $card['urls'];
+                  $images = array();
+                  $isFirstUrl = true;
+                  foreach($urls as $url){
+                    $divClass = $isFirstUrl? "carousel-item active" : "carousel-item";
+                    $div = '
+                    <div class="'.$divClass.'" data-interval="5000">
+                      <img src="'.$url.'" class="d-block w-100">
+                    </div>
                     ';
-                    $carouselId++;
-                    echo($cards);
-                    }
-                    mysqli_close($connessione);    
+                    array_push($images, $div);
+                    $isFirstUrl = false;
+                  }
+                  $cards = '
+                    <div class="card mb-4 box-shadow">
+                      <div id="destImagesCarousel'.$carouselId.'" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">'
+                          . implode($images) .
+                        '</div>
+                        <a class="carousel-control-prev" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#destImagesCarousel'.$carouselId.'" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>
+                      <div class="card-body">
+                        <h5 class="card-title">'.$citta.'</h5>
+                        <p class="card-text">'.$descrizione.'</p>
+                        <h6 class="card-subtitle mb-2 text-muted">'.$prezzo.' €/notte</h6>
+                      </div>
+                    </div>
+                  ';
+                  $carouselId++;
+                  echo($cards);
+                }
+                mysqli_close($connessione);    
+            ?>
+          </div>
+          <div class="col">
+            <!-- SE METTIAMO LA EMAIL COME ATTRIBUTO DI USER NON SERVIRA PIU QUESTO FORM -->
+            <form action="confirm/index.php" method="POST">
+              <h5 class="pb-3">Inserisci una mail valida e clicca su Acquista per procedere al pagamento, altrimenti clicca cancella</h5>
+                <?php 
+                  echo "<input type='hidden' name='id_dest' value='$id'>";
                 ?>
-                </div>
-                <div class="col">
-                    <form action="confirm/index.php" method="POST">
-                        <h5 class="pb-3">Inserisci una mail valida e clicca su Acquista per procedere al pagamento, altrimenti clicca cancella</h5>
-                        <?php 
-                          echo "<input type='hidden' name='id_dest' value='$id'>";
-                        ?>
-                        <input type="email" class="form-control" name="email" placeholder="Inserisci una mail" required>
-                        <div class="btn-toolbar justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
-                            <a href="/main/main.php" class="btn btn-outline-danger mt-3 mr-3">Cancella</a> 
-                            <button type="submit" class="btn btn-primary mt-3">Acquista Ora</button> 
-                        </div>
-                    </form>
-                </div>
-            </div>
+              <input type="email" class="form-control" name="email" placeholder="Inserisci una mail" required>
+              <div class="btn-toolbar justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
+                <a href="/main/main.php" class="btn btn-outline-danger mt-3 mr-3">Cancella</a> 
+                <button type="submit" class="btn btn-primary mt-3">Acquista Ora</button> 
+              </div>
+            </form>
+          </div>
         </div>
-        
+      </div>
     </main>
     <footer class="text-muted" style="padding-top: 5vh;">
       <div class="container">
