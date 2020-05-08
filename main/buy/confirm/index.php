@@ -1,4 +1,5 @@
 <?php
+  session_start();
   require_once('../../../vendor/autoload.php');
   $id = $_POST['id_dest'];
   $config = file_get_contents('../../../config.json');
@@ -31,6 +32,9 @@
       ],
     ],
   ]);
+  $_SESSION['id_dest'] = $id;
+  $_SESSION['id_checkout_stripe'] = $session['id'];
+
 ?>
 <button id="confirm">Confirm</button>
 <script src="https://js.stripe.com/v3/"></script>
