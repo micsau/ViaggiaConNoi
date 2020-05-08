@@ -80,11 +80,11 @@
             $jConfig = json_decode($config, true);
             $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
             if(empty($_POST) || !$_POST["search"]){
-              $sql = "SELECT * FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false";
+              $sql = "SELECT Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false";
             }
             else{
               $citta = $_POST["search"];
-              $sql = "SELECT * FROM Destinazioni, Immagini WHERE citta='$citta' AND Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false";
+              $sql = "SELECT Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE citta='$citta' AND Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false";
             }
             $result = $connessione->query($sql);
             $cardsData = formatCardsResult($result);
