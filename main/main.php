@@ -163,7 +163,7 @@
           <?php
             for($i=0;$i<sizeof($cardsData);$i++){
               echo '
-                position = new OpenLayers.LonLat('.$cardsData[$i]["longitudine"].','.$cardsData[$i]["latitsudine"].').transform(fromProjection, toProjection);
+                position = new OpenLayers.LonLat('.$cardsData[$i]["longitudine"].','.$cardsData[$i]["latitudine"].').transform(fromProjection, toProjection);
                 markers = new OpenLayers.Layer.Markers("Markers");
                 map.addLayer(markers);
                 markers.addMarker(new OpenLayers.Marker(position));
