@@ -12,7 +12,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="../css/main.css">
-    <title>Login</title>
+    <title>Sign Up</title>
   </head>
   <body>
     <header id="head">
@@ -66,7 +66,11 @@
           <?php 
             $username = $_POST["username"];
             $password =$_POST["password"];
-            // $email=$_POST["email"];
+            $email=$_POST["email"];
+            $birthday=$_POST["birthday"];
+            $birthplace=$_POST["birthplace"];
+            $name=$_POST["name"];
+            $surname=$_POST["surname"];
             $errorDivOpen = '<div class="alert alert-danger">';
             $successDivOpen = '<div class="alert alert-success">';
             $divClose = '</div>';
@@ -85,13 +89,41 @@
               echo $backButton;
               exit($divClose);
             }
-            // if(!$email){
-            //   echo '<h1 class="pt-2">Errore:</h1>';
-            //   echo $errorDivOpen;
-            //   echo "Inserisci una email!";
-            //   echo $backButton;
-            //   exit($divClose);
-            // }
+            if(!$email){
+              echo '<h1 class="pt-2">Errore:</h1>';
+              echo $errorDivOpen;
+              echo "Inserisci una email!";
+              echo $backButton;
+              exit($divClose);
+            }
+            if(!$name){
+              echo '<h1 class="pt-2">Errore:</h1>';
+              echo $errorDivOpen;
+              echo "Inserisci un nome!";
+              echo $backButton;
+              exit($divClose);
+            }
+            if(!$surname){
+              echo '<h1 class="pt-2">Errore:</h1>';
+              echo $errorDivOpen;
+              echo "Inserisci un cognome!";
+              echo $backButton;
+              exit($divClose);
+            }
+            if(!$birthday){
+              echo '<h1 class="pt-2">Errore:</h1>';
+              echo $errorDivOpen;
+              echo "Inserisci la tua data di nascita!";
+              echo $backButton;
+              exit($divClose);
+            }
+            if(!$birthplace){
+              echo '<h1 class="pt-2">Errore:</h1>';
+              echo $errorDivOpen;
+              echo "Inserisci il luogo di nascita!";
+              echo $backButton;
+              exit($divClose);
+            }
             $config = file_get_contents('../config.json');
             $jConfig = json_decode($config, true);
             $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
@@ -105,7 +137,7 @@
               exit($divClose);
             }
             // $sql = "INSERT INTO Users (username, password, email) VALUES ('$username', '$password', '$email')";
-            $sql = "INSERT INTO Users (username, password, role) VALUES ('$username', '$password', 0)";
+            $sql = "INSERT INTO Users (username, password, role, email, luogo_nascita, data_nascita, nome, cognome) VALUES ('$username', '$password', 0, '$email','$birthplace','$birthday','$name','$surname')";
             if ($connessione->query($sql)) {
               echo '<h1 class="pt-2">Successo:</h1>';
               echo $successDivOpen;

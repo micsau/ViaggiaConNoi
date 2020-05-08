@@ -86,7 +86,7 @@
                 $row = mysqli_fetch_assoc($result);
                 $_SESSION["Nome"] = $username;
                 ob_start();
-                header('Location: \main\main.php');  //mi posiziono su dizionario una volta effettuato il login.
+                header('Location: \main\main.php');  
                 ob_end_flush();
                 exit();
               } else {

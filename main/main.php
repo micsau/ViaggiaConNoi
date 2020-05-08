@@ -20,7 +20,7 @@
             <div class="col-sm-8 col-md-7 py-4">
               <h4 class="text-white">ViaggiaConNoi</h4>
               <p class="text-muted">ViaggiaConNoi startup innovativa per prenotare e viaggiare comodamente ed il risparmio è garantito</p>
-              <form action="..\Profile\Profile.html">
+              <form action="/profile/index.php">
                 <button type="submit" class="btn btn-success">Profilo</button>
               </form>
               <form action="..\logout\logout.php">
@@ -80,11 +80,11 @@
             $jConfig = json_decode($config, true);
             $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
             if(empty($_POST) || !$_POST["search"]){
-              $sql = "SELECT Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false";
+              $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false";
             }
             else{
               $citta = $_POST["search"];
-              $sql = "SELECT Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE citta='$citta' AND Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false";
+              $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE citta='$citta' AND Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false";
             }
             $result = $connessione->query($sql);
             $cardsData = formatCardsResult($result);
@@ -150,7 +150,7 @@
       <script>
           let lat = 45.5257;
           let lon = 10.2283;
-          let zoom = 10;
+          let zoom = 5;
 
           let fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
           let toProjection = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
@@ -159,6 +159,18 @@
           let mapnik = new OpenLayers.Layer.OSM();
           map.addLayer(mapnik);
           map.setCenter(position, zoom);
+          let markers;
+          <?php
+            for($i=0;$i<sizeof($cardsData);$i++){
+              echo '
+                position = new OpenLayers.LonLat('.$cardsData[$i]["longitudine"].','.$cardsData[$i]["latitsudine"].').transform(fromProjection, toProjection);
+                markers = new OpenLayers.Layer.Markers("Markers");
+                map.addLayer(markers);
+                markers.addMarker(new OpenLayers.Marker(position));
+                map.setCenter(position, zoom);
+              ';
+            }
+          ?>
           postition = navigator.geolocation.getCurrentPosition(function(posit){
             position = new OpenLayers.LonLat(posit.coords.longitude || lon, posit.coords.latitude || lat).transform(fromProjection, toProjection);
             let markers = new OpenLayers.Layer.Markers("Markers");

@@ -1,13 +1,23 @@
+<?php
+  session_start();
+  $username = $_SESSION["Nome"];
+  $config = file_get_contents('../../config.json');
+  $jConfig = json_decode($config, true);
+  $connessione = new mysqli ($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
+  $sql = "SELECT id FROM Users WHERE username = $username";
+  $result = $connessione->query($sql);
+  $utente=$result->fetch_assoc();
+  $userid=$utente['id'];
+?>
 <html>    <!--ViaggiaConNoi-->
   <head>
     <link rel="icon" type="image/png" href="../../assets/logo/logo-ico.png"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Viaggia Con Noi: divertiti viaggiando!">
+    <meta name="author" content="Michele Saulle">
     <link rel="stylesheet" href="../../css/main.css">
-
     <title>ViaggiaConNoi</title>
   </head>
   <body>
@@ -18,7 +28,7 @@
             <div class="col-sm-8 col-md-7 py-4">
               <h4 class="text-white">ViaggiaConNoi</h4>
               <p class="text-muted">ViaggiaConNoi startup innovativa per prenotare e viaggiare comodamente ed il risparmio è garantito</p>
-              <form action="..\..\Profile\Profile.html">
+              <form action="/profile/index.php">
                 <button type="submit" class="btn btn-success">Profilo</button>
               </form>
               <form action="..\..\logout\logout.php">
@@ -44,40 +54,38 @@
         </div>
       </div>
     </header>
-    
-    <main class="pt-3">
-      <div class="container">
+    <main role="main">
+      <div class="container mt-3">
         <div class="row">
-          <div class="col-4">
-            <?php 
-                require_once('../../utils/utils.php');
-                $id = $_POST['id'];
-                $config = file_get_contents('../../config.json');
-                $jConfig = json_decode($config, true);
-                $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
-                $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE Destinazioni.id = '$id' AND Destinazioni.id = Immagini.id_dest_fk";
-                $result = $connessione->query($sql);
-                $cardsData = formatCardsResult($result);
-                $carouselId = 0;
-                foreach($cardsData as $card) {
-                  $citta = $card['citta'];
-                  $id = $card['id'];
-                  $descrizione = $card['descrizione'];
-                  $prezzo = $card['prezzo'];
-                  $urls = $card['urls'];
-                  $images = array();
-                  $isFirstUrl = true;
-                  foreach($urls as $url){
-                    $divClass = $isFirstUrl? "carousel-item active" : "carousel-item";
-                    $div = '
+            <?php
+              require_once("../../utils/utils.php");
+              $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
+              if(empty($_POST) || !$_POST["search"]){
+                $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.id_user_fk='$userid'";
+              }
+              $result = $connessione->query($sql);
+              $cardsData = formatCardsResult($result);
+              $carouselId = 0;
+              foreach($cardsData as $card) {
+                $citta = $card['citta'];
+                $id = $card['id'];
+                $descrizione = $card['descrizione'];
+                $prezzo = $card['prezzo'];
+                $urls = $card['urls'];
+                $images = array();
+                $isFirstUrl = true;
+                foreach($urls as $url){
+                  $divClass = $isFirstUrl? "carousel-item active" : "carousel-item";
+                  $div = '
                     <div class="'.$divClass.'" data-interval="5000">
                       <img src="'.$url.'" class="d-block w-100">
                     </div>
-                    ';
-                    array_push($images, $div);
-                    $isFirstUrl = false;
-                  }
-                  $cards = '
+                  ';
+                  array_push($images, $div);
+                  $isFirstUrl = false;
+                }
+                $cards = '
+                  <div class="col-3">
                     <div class="card mb-4 box-shadow">
                       <div id="destImagesCarousel'.$carouselId.'" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">'
@@ -98,27 +106,13 @@
                         <h6 class="card-subtitle mb-2 text-muted">'.$prezzo.' €/notte</h6>
                       </div>
                     </div>
-                  ';
-                  $carouselId++;
-                  echo($cards);
-                }
-                mysqli_close($connessione);    
-            ?>
-          </div>
-          <div class="col">
-            <!-- SE METTIAMO LA EMAIL COME ATTRIBUTO DI USER NON SERVIRA PIU QUESTO FORM -->
-            <form action="confirm/index.php" method="POST">
-              <h5 class="pb-3">Inserisci una mail valida e clicca su Acquista per procedere al pagamento, altrimenti clicca cancella</h5>
-                <?php 
-                  echo "<input type='hidden' name='id_dest' value='$id'>";
-                ?>
-              <input type="email" class="form-control" name="email" placeholder="Inserisci una mail" required>
-              <div class="btn-toolbar justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
-                <a href="/main/main.php" class="btn btn-outline-danger mt-3 mr-3">Cancella</a> 
-                <button type="submit" class="btn btn-primary mt-3">Acquista Ora</button> 
-              </div>
-            </form>
-          </div>
+                  </div>
+                ';
+                $carouselId++;
+                echo($cards);
+              }
+              mysqli_close($connessione);
+            ?>  
         </div>
       </div>
     </main>

@@ -7,7 +7,9 @@ function formatCardsResult($result){
       'id' => $row['id'], 
       'citta' => $row['citta'],  
       'notti' => $row['notti'],
-      'descrizione' => $row['descrizione'],  
+      'descrizione' => $row['descrizione'],
+      'latitudine' => $row['latitudine'],
+      'longitudine' => $row['longitudine'],
       'id_dest_fk' => $row['id_dest_fk'], 
       'prezzo' => $row['prezzo'],
       'urls' => array($row['url'])
