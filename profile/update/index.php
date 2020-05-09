@@ -32,7 +32,7 @@
             <div class="col-sm-8 col-md-7 py-4">
               <h4 class="text-white">ViaggiaConNoi</h4>
               <p class="text-muted">ViaggiaConNoi startup innovativa per prenotare e viaggiare comodamente ed il risparmio è garantito</p>
-              <form action="../profile/index.php">
+              <form action="../../profile/index.php">
                 <button type="submit" class="btn btn-success">Profilo</button>
               </form>
               <form action="..\..\logout\logout.php">
