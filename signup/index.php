@@ -136,8 +136,71 @@
               echo $backButton;
               exit($divClose);
             }
+            
+            require_once("../utils/s3.php");
+            
+            $S3 = new S3($jConfig["AWS_ACCESS_KEY"], $jConfig["AWS_SECRET_KEY"]);
+            $bucketname = "viaggiaconnoiprofilepic";
+            $uploadname = "$username.png";
+            $target_dir = "../uploads/";
+            $target_file = $target_dir . basename($_FILES["image"]["name"]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+            // Check if image file is a actual image or fake image
+            if(isset($_POST["submit"])) {
+              $check = getimagesize($_FILES["image"]["tmp_name"]);
+              if($check !== false) {
+                $uploadOk = 1;
+              } else {
+                echo '<h1 class="pt-2">Errore:</h1>';
+                echo $errorDivOpen;
+                echo "File is not an image.";
+                echo $backButton;
+                exit($divClose);            
+                $uploadOk = 0;
+              }
+            }
+
+            // Check if file already exists
+            if (file_exists($target_file)) {
+              echo '<h1 class="pt-2">Errore:</h1>';
+              echo $errorDivOpen;
+              echo "Sorry, file already exists.";
+              echo $backButton;
+              exit($divClose);
+              $uploadOk = 0;
+            }
+
+
+            // Allow certain file formats
+            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+            && $imageFileType != "gif" ) {
+              echo '<h1 class="pt-2">Errore:</h1>';
+              echo $errorDivOpen;
+              echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+              echo $backButton;
+              exit($divClose);
+              $uploadOk = 0;
+            }
+            move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+            $result = $S3::putObject($S3::inputFile($target_file,false),$bucketname, $uploadname, $S3::ACL_PUBLIC_READ);
+            unlink($target_file);
+            if($result != 1){
+              echo '<h1 class="pt-2">Errore:</h1>';
+              echo $errorDivOpen;
+              echo "errore durante il caricamento dell'immagine!";
+              echo $backButton;
+              exit($divClose);
+            }
+            $uploadURL = 'https://' . $bucketname . '.s3.amazonaws.com/'.$uploadname;
             // $sql = "INSERT INTO Users (username, password, email) VALUES ('$username', '$password', '$email')";
-            $sql = "INSERT INTO Users (username, password, role, email, luogo_nascita, data_nascita, nome, cognome) VALUES ('$username', '$password', 0, '$email','$birthplace','$birthday','$name','$surname')";
+            $sql = "INSERT INTO Profilepics(url) VALUES ('$uploadURL')"; 
+            $result = $connessione->query($sql);
+            $sql = "SELECT id FROM Profilepics WHERE url = '$uploadURL'";
+            $result = $connessione->query($sql);
+            $image=$result->fetch_assoc();
+            $sql = "INSERT INTO Users (username, password, role, email, luogo_nascita, data_nascita, nome, cognome, id_profilepic_fk) VALUES ('$username', '$password', 0, '$email','$birthplace','$birthday','$name','$surname','{$image['id']}')";
             if ($connessione->query($sql)) {
               echo '<h1 class="pt-2">Successo:</h1>';
               echo $successDivOpen;
@@ -146,7 +209,11 @@
               exit($divClose);
               echo "I nuovi dati sono stati inseriti con successo";
             } else {
-              echo "Errore: " . $sql . "<br>" . $connessione->error;
+              echo '<h1 class="pt-2">Errore:</h1>';
+              echo $errorDivOpen;
+              echo $sql . "<br>" . $connessione->error;
+              echo $backButton;
+              exit($divClose);
             }
             $connessione->close();
           ?>
