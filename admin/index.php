@@ -71,9 +71,24 @@
     </header>
     <div class="container">
       <div class="row">
-        <div class="col">
+        <div class="col pt-3">
           <?php
             if(sizeof($_POST) > 0){
+              $errorDivOpen = '<div class="alert alert-danger">';
+              $successDivOpen = '<div class="alert alert-success">';
+              $divClose = '</div>';
+              $backButton = '<br><br><a class ="btn btn-primary" href="/admin">Ritorna Indietro</a>';
+              $sql = "INSERT INTO Destinazioni(citta,prezzo,notti,latitudine,longitudine,descrizione,isBought,id_user_fk) VALUES('{$_POST['citta']}','{$_POST['prezzo']}','{$_POST['notti']}','{$_POST['latitudine']}','{$_POST['longitudine']}','{$_POST['descrizione']}','0','0')";
+              $result = $connessione->query($sql);
+              if($result != 1){
+                  echo '<h1 class="pt-2">Errore:</h1>';
+                  echo $errorDivOpen;
+                  echo "errore durante l'inserimento dei dati nel db! riprova più tardi";
+                  echo $backButton;
+                  exit($divClose);
+                  $uploadOk = 0;
+              }
+              $id_dest=$connessione->insert_id;
               $urlsArray = array();
               require_once('../utils/s3.php');
               $S3 = new S3($jConfig["AWS_ACCESS_KEY"], $jConfig["AWS_SECRET_KEY"]);
@@ -84,7 +99,7 @@
               for($i=0;$i<$countfiles;$i++){
                 $target_file = $target_dir . basename($_FILES['immagini']["name"][$i]);
                 $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-                $uploadname = "{$_POST['citta']}$i.png";
+                $uploadname = "{$_POST['citta']}-".uniqid().".png";
                 if (file_exists($target_file)) {
                   echo '<h1 class="pt-2">Errore:</h1>';
                   echo $errorDivOpen;
@@ -115,17 +130,46 @@
                 $uploadURL = 'https://' . $bucketname . '.s3.amazonaws.com/'.$uploadname;
                 array_push($urlsArray, $uploadURL);
               }
-              print_r($urlsArray);
+              foreach($urlsArray as $url){
+                $sql = "INSERT INTO Immagini(url,id_dest_fk) VALUES('$url','$id_dest')";
+                $result = $connessione->query($sql);
+              }
+              echo $successDivOpen;
+              echo "Dati inseriti correttamente!!";
+              echo $backButton;
+              echo $divClose;
             }else{
               echo '
                 <form action="/admin/index.php" method="POST" enctype="multipart/form-data">
-                  <input type="text" name="citta" class="form-control" placeholder="citta">    
-                  <input type="number" name="prezzo" class="form-control" placeholder="prezzo">    
-                  <input type="number" name="notti" class="form-control" placeholder="notti">
-                  <input type="number" name="latitudine" class="form-control" placeholder="latitudine"> 
-                  <input type="number" name="longitudine" class="form-control" placeholder="longitudine">
-                  <input type="file" name="immagini[]" class="form-control-files" placeholder="immagini" multiple>
-                  <textarea name="descrizione" class="form-control" placeholder="descrizione"></textarea>
+                  <h5 class="pb-3">Aggiungi una destinazione</h5>
+                  <div class="form-group">
+                  <label for="citta">Città</label>
+                  <input type="text" name="citta" class="form-control" placeholder="citta" required>    
+                  </div>
+                  <div class="form-group">
+                  <label for="prezzo">Prezzo</label>
+                  <input type="number" step="0.01" name="prezzo" class="form-control" placeholder="prezzo" required>    
+                  </div>
+                  <div class="form-group">
+                  <label for="notti">Notti</label>
+                  <input type="number" name="notti" class="form-control" placeholder="notti" required>    
+                  </div>
+                  <div class="form-group">
+                  <label for="latitudine">Latitudine</label>
+                  <input type="number" step="0.0000001" name="latitudine" class="form-control" placeholder="latitudine" required> 
+                  </div>
+                  <div class="form-group">
+                  <label for="longitudine">Longitudine</label>
+                  <input type="number" step="0.0000001" name="longitudine" class="form-control" placeholder="longitudine" required>
+                  </div>
+                  <div class="form-group">
+                  <label for="immagini">Immagini</label>
+                  <input type="file" id="immagini" name="immagini[]" class="form-control-file" placeholder="immagini" multiple required>
+                  </div>
+                  <div class="form-group">
+                  <label for="descrizione">Descrizione</label>
+                  <textarea name="descrizione" class="form-control" placeholder="descrizione" required></textarea>
+                  </div>
                   <button type="submit" class="btn btn-success">Aggiungi</button>
                 </form>
               ';
