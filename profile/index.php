@@ -4,7 +4,7 @@
   $config = file_get_contents('../config.json');
   $jConfig = json_decode($config, true);
   $connessione = new mysqli ($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
-  $sql = "SELECT * FROM Users WHERE username = $username";
+  $sql = "SELECT * FROM Users WHERE username = '$username'";
   $result = $connessione->query($sql);
   $utente=$result->fetch_assoc();
   $name=$utente['nome'];
@@ -12,6 +12,11 @@
   $birthday=$utente['data_nascita'];
   $birthplace=$utente['luogo_nascita'];
   $email=$utente['email'];
+  $imageid=$utente['id_profilepic_fk'];
+  $sql = "SELECT url FROM Profilepics WHERE id = '$imageid'";
+  $result = $connessione->query($sql);
+  $image = $result->fetch_assoc();
+  $imageURL = $image['url'];
 ?>
 <html>    <!--ViaggiaConNoi-->
   <head>
@@ -63,7 +68,14 @@
         <div class="row">
           <div class="col p-3" style="border-right:1px solid #e6e5e3">
             <?php
-              echo "<h3>$username</h3> ";
+              echo "
+                <div class='media'>
+                <img src='$imageURL' class='mr-3 align-self-center img-thumbnail' width='200'></img>
+                <div class='media-body'>
+                <h5>$username</h5>
+                </div>
+                </div>
+              ";
               echo "<hr>";
               echo "<h5>Nome</h5> <p>$name<p>";
               echo "<hr>";

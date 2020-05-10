@@ -4,7 +4,7 @@
   $config = file_get_contents('../../config.json');
   $jConfig = json_decode($config, true);
   $connessione = new mysqli ($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
-  $sql = "SELECT id FROM Users WHERE username = $username";
+  $sql = "SELECT id FROM Users WHERE username = '$username'";
   $result = $connessione->query($sql);
   $utente=$result->fetch_assoc();
   $userid=$utente['id'];
