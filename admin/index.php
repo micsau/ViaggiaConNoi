@@ -74,11 +74,14 @@
         <div class="col pt-3">
           <?php
             if(sizeof($_POST) > 0){
+              require_once("../utils/geolocalization.php");
               $errorDivOpen = '<div class="alert alert-danger">';
               $successDivOpen = '<div class="alert alert-success">';
               $divClose = '</div>';
               $backButton = '<br><br><a class ="btn btn-primary" href="/admin">Ritorna Indietro</a>';
-              $sql = "INSERT INTO Destinazioni(citta,prezzo,notti,latitudine,longitudine,descrizione,isBought,id_user_fk) VALUES('{$_POST['citta']}','{$_POST['prezzo']}','{$_POST['notti']}','{$_POST['latitudine']}','{$_POST['longitudine']}','{$_POST['descrizione']}','0','0')";
+              $geoloc = new Geolocalization($_POST['citta']);
+              $coordinate = $geoloc->getLonLat();  
+              $sql = "INSERT INTO Destinazioni(citta,prezzo,notti,latitudine,longitudine,descrizione,isBought,id_user_fk) VALUES('{$_POST['citta']}','{$_POST['prezzo']}','{$_POST['notti']}','{$coordinate['lat']}','{$coordinate['lon']}','{$_POST['descrizione']}','0','0')";
               $result = $connessione->query($sql);
               if($result != 1){
                   echo '<h1 class="pt-2">Errore:</h1>';
@@ -152,16 +155,7 @@
                   </div>
                   <div class="form-group">
                   <label for="notti">Notti</label>
-                  <input type="number" name="notti" class="form-control" placeholder="notti" required>    
-                  </div>
-                  <div class="form-group">
-                  <label for="latitudine">Latitudine</label>
-                  <input type="number" step="0.0000001" name="latitudine" class="form-control" placeholder="latitudine" required> 
-                  </div>
-                  <div class="form-group">
-                  <label for="longitudine">Longitudine</label>
-                  <input type="number" step="0.0000001" name="longitudine" class="form-control" placeholder="longitudine" required>
-                  </div>
+                  <input type="number" name="notti" class="form-control" placeholder="notti" required>  
                   <div class="form-group">
                   <label for="immagini">Immagini</label>
                   <input type="file" id="immagini" name="immagini[]" class="form-control-file" placeholder="immagini" multiple required>
