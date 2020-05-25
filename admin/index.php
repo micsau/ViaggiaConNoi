@@ -27,7 +27,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="../css/main.css">
-    <title>Login</title>
+    <title>Admin</title>
   </head>
   <body>
     <header id="head">
@@ -81,7 +81,7 @@
               $backButton = '<br><br><a class ="btn btn-primary" href="/admin">Ritorna Indietro</a>';
               $geoloc = new Geolocalization($_POST['citta']);
               $coordinate = $geoloc->getLonLat();  
-              $sql = "INSERT INTO Destinazioni(citta,prezzo,notti,latitudine,longitudine,descrizione,isBought,id_user_fk) VALUES('{$_POST['citta']}','{$_POST['prezzo']}','{$_POST['notti']}','{$coordinate['lat']}','{$coordinate['lon']}','{$_POST['descrizione']}','0','0')";
+              $sql = "INSERT INTO Destinazioni(citta,prezzo,notti,latitudine,longitudine,descrizione,isBought,quantità,id_user_fk) VALUES('{$_POST['citta']}','{$_POST['prezzo']}','{$_POST['notti']}','{$coordinate['lat']}','{$coordinate['lon']}','{$_POST['descrizione']}','0','{$_POST['quantità']}','0')";
               $result = $connessione->query($sql);
               if($result != 1){
                   echo '<h1 class="pt-2">Errore:</h1>';
@@ -159,6 +159,10 @@
                   <div class="form-group">
                   <label for="immagini">Immagini</label>
                   <input type="file" id="immagini" name="immagini[]" class="form-control-file" placeholder="immagini" multiple required>
+                  </div>
+                  <div class="form-group">
+                  <label for="quantità">Quantità</label>
+                  <input type="number" id="quantità" name="quantità" class="form-control" placeholder="quantità" required>
                   </div>
                   <div class="form-group">
                   <label for="descrizione">Descrizione</label>

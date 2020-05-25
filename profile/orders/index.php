@@ -61,7 +61,7 @@
               require_once("../../utils/utils.php");
               $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
               if(empty($_POST) || !$_POST["search"]){
-                $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.id_user_fk='$userid'";
+                $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.quantità, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini, Acquisti WHERE Destinazioni.id = Immagini.id_dest_fk AND Acquisti.id_dest_fk = Destinazioni.id AND Acquisti.id_user_fk ='$userid'";
               }
               $result = $connessione->query($sql);
               $cardsData = formatCardsResult($result);

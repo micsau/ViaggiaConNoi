@@ -36,7 +36,7 @@
   ]);
   $_SESSION['id_dest'] = $id;
   $_SESSION['id_checkout_stripe'] = $session['id'];
-
+  
 ?>
 <html>    <!--ViaggiaConNoi-->
   <head>

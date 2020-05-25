@@ -55,7 +55,7 @@
                 $config = file_get_contents('../../config.json');
                 $jConfig = json_decode($config, true);
                 $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
-                $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE Destinazioni.id = '$id' AND Destinazioni.id = Immagini.id_dest_fk";
+                $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Destinazioni.quantità, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE Destinazioni.id = '$id' AND Destinazioni.id = Immagini.id_dest_fk";
                 $result = $connessione->query($sql);
                 $cardsData = formatCardsResult($result);
                 $carouselId = 0;

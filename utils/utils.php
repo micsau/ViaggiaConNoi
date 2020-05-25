@@ -12,7 +12,8 @@ function formatCardsResult($result){
       'longitudine' => $row['longitudine'],
       'id_dest_fk' => $row['id_dest_fk'], 
       'prezzo' => $row['prezzo'],
-      'urls' => array($row['url'])
+      'urls' => array($row['url']),
+      'quantità' => $row['quantità']
     );
     array_push($rows, $rowData);
   }

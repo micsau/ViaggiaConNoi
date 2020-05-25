@@ -80,11 +80,11 @@
             $jConfig = json_decode($config, true);
             $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
             if(empty($_POST) || !$_POST["search"]){
-              $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false";
+              $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Destinazioni.quantità, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false AND quantità > 0";
             }
             else{
               $citta = $_POST["search"];
-              $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE citta='$citta' AND Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false";
+              $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.isBought, Destinazioni.quantità, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini WHERE citta='$citta' AND Destinazioni.id = Immagini.id_dest_fk AND Destinazioni.isBought = false AND quantità > 0";
             }
             $result = $connessione->query($sql);
             $cardsData = formatCardsResult($result);
@@ -97,6 +97,7 @@
               $urls = $card['urls'];
               $images = array();
               $isFirstUrl = true;
+              $quantità = $card['quantità'];
               foreach($urls as $url){
                 $divClass = $isFirstUrl? "carousel-item active" : "carousel-item";
                 $div = '
@@ -131,6 +132,7 @@
                         <div class="btn-group">
                           <form action="buy/index.php" method=POST>
                             <input type="hidden" name="id" value="'.$id.'">
+                            <label for="disponibilità">Disponibilità : '.$quantità.'</label><br>
                               <button type="submit" class="btn btn-outline-secondary">Acquista</button>
                           </form>
                         </div>
