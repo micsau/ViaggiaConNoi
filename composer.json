@@ -1,6 +1,6 @@
 {
     "require": {
         "stripe/stripe-php": "^7.31",
-        "locationiq-provider/geocoder-php":"^1.0"
-    }
+        "locationiq-provider/geocoder-php":"^1.0",
+        "ext-mysqli": "*"
 }

@@ -171,7 +171,7 @@
               ';
             }
           ?>
-          postition = navigator.geolocation.getCurrentPosition(function(posit){
+          position = navigator.geolocation.getCurrentPosition(function(posit){
             position = new OpenLayers.LonLat(posit.coords.longitude || lon, posit.coords.latitude || lat).transform(fromProjection, toProjection);
             let markers = new OpenLayers.Layer.Markers("Markers");
             map.addLayer(markers);
