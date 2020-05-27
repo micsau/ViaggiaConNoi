@@ -77,9 +77,9 @@
                 echo("Inserisci una password per accedere!");
                 exit('<br><br><a class ="btn btn-primary" href="index.html">Ritorna Indietro </a>');
               }
-              $config = file_get_contents('../config.json');
-              $jConfig = json_decode($config, true);
-              $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
+              //$config = file_get_contents('../config.json');
+              //$_ENV = json_decode($config, true);
+              $connessione = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
               $sql = "SELECT * FROM Users where username='$username' AND password='$password'";
               $result = $connessione->query($sql);   //eseguo la query.
               if ($result->num_rows > 0) {
