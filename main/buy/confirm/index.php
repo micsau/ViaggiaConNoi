@@ -21,8 +21,8 @@
 
   // Session is an array wich includes the id for the checkout
   $session = \Stripe\Checkout\Session::create([
-    'success_url' => "http://$baseurl/main/buy/success",
-    'cancel_url' => "http://$baseurl",
+    'success_url' => "$baseurl/main/buy/success",
+    'cancel_url' => "$baseurl",
     'payment_method_types' => ['card'],
     'line_items' => [
       [
