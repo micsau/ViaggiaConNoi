@@ -30,9 +30,13 @@ l'immagine del profilo una volta inserita non si può cambiare, quindi ATTENZION
 # SCHEMA LOGICO (Per i più curiosi)
 
 Acquisti (data, id_user_fk, id_dest_fk).
+
 Destinazioni (id, citta, prezzo, notti, descrizione, latitudine, longitudine, isBought, quantità, id_user_fk).
+
 Immagini (id, url, id_dest_fk).
+
 Profilepics (id, url).
+
 Users (id, username, password, role, nome, cognome, data_nascita, luogo_nascita, email, id_profilepic_fk).
 
 # UPGRADE ANCORA SOTTO SVILUPPO
