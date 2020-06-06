@@ -2,9 +2,9 @@
   session_start();
   require_once('../../../vendor/autoload.php');
   $id = $_POST['id_dest'];
-  $config = file_get_contents('../../../config.json');
-  $jConfig = json_decode($config, true);
-  $connessione = new mysqli($jConfig["DB_HOST"], $jConfig["DB_USER"], $jConfig["DB_PASSWORD"], $jConfig["DB_NAME"]);
+  //$config = file_get_contents('../../../config.json');
+  //$_ENV = json_decode($config, true);
+  $connessione = new mysqli($_ENV["DB_HOST"], $_ENV["DB_USER"], $_ENV["DB_PASSWORD"], $_ENV["DB_NAME"]);
   $sql = "SELECT * FROM Destinazioni WHERE id='$id'"; 
   $result = $connessione->query($sql);
   $dest = $result->fetch_assoc();
@@ -12,17 +12,17 @@
   $descrizione = $dest['descrizione'];
   $prezzo = $dest['prezzo'] * 100;
   $notti = $dest['notti'];
-  $baseurl = $jConfig["BASE_URL"];
+  $baseurl = $_ENV["BASE_URL"];
 
 
 
   // ***STARTING STRIPE CONFIGURATION***
-  \Stripe\Stripe::setApiKey($jConfig["STRIPE_API_KEY"]);
+  \Stripe\Stripe::setApiKey($_ENV["STRIPE_API_KEY"]);
 
   // Session is an array wich includes the id for the checkout
   $session = \Stripe\Checkout\Session::create([
-    'success_url' => "http://$baseurl/main/buy/success",
-    'cancel_url' => "http://$baseurl",
+    'success_url' => "$baseurl/main/buy/success",
+    'cancel_url' => "$baseurl",
     'payment_method_types' => ['card'],
     'line_items' => [
       [
@@ -92,7 +92,7 @@
             <a href="/main/main.php" class="btn btn-danger">Indietro</a>
             <script src="https://js.stripe.com/v3/"></script>
             <script>
-              var stripe=Stripe("<?php echo $jConfig["STRIPE_API_KEY_PUBLIC"]?>");
+              var stripe=Stripe("<?php echo $_ENV["STRIPE_API_KEY_PUBLIC"]?>");
               var confirmBtn=document.getElementById("confirm");
               confirmBtn.addEventListener("click",function(){
                 // Redirects to Stripe checkout page

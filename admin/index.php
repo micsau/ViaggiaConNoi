@@ -1,9 +1,9 @@
 <?php
     session_start();
     error_reporting(E_ALL ^ E_DEPRECATED);
-    $config = file_get_contents('../config.json');
-    $jConfig = json_decode($config, true);
-    $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
+    //$config = file_get_contents('../config.json');
+    //$_ENV = json_decode($config, true);
+    $connessione = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     $username=$_SESSION['Nome'];
     $sql = "SELECT * FROM Users WHERE username = '$username'";
     $result = $connessione->query($sql);
@@ -94,7 +94,7 @@
               $id_dest=$connessione->insert_id;
               $urlsArray = array();
               require_once('../utils/s3.php');
-              $S3 = new S3($jConfig["AWS_ACCESS_KEY"], $jConfig["AWS_SECRET_KEY"]);
+              $S3 = new S3($_ENV["AWS_ACCESS_KEY"], $_ENV["AWS_SECRET_KEY"]);
               $bucketname = "viaggiaconnoiimages";
               $target_dir = "../uploads/";
               $uploadOk = 1;

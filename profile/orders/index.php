@@ -1,9 +1,9 @@
 <?php
   session_start();
   $username = $_SESSION["Nome"];
-  $config = file_get_contents('../../config.json');
-  $jConfig = json_decode($config, true);
-  $connessione = new mysqli ($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
+  //$config = file_get_contents('../../config.json');
+  //$_ENV = json_decode($config, true);
+  $connessione = new mysqli ($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
   $sql = "SELECT id FROM Users WHERE username = '$username'";
   $result = $connessione->query($sql);
   $utente=$result->fetch_assoc();
@@ -59,7 +59,7 @@
         <div class="row">
             <?php
               require_once("../../utils/utils.php");
-              $connessione = new mysqli($jConfig['DB_HOST'], $jConfig['DB_USER'], $jConfig['DB_PASSWORD'], $jConfig['DB_NAME']);
+              $connessione = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
               if(empty($_POST) || !$_POST["search"]){
                 $sql = "SELECT Destinazioni.latitudine, Destinazioni.longitudine, Destinazioni.citta, Destinazioni.id, Destinazioni.prezzo, Destinazioni.notti, Destinazioni.descrizione, Destinazioni.quantità, Destinazioni.isBought, Immagini.id_dest_fk, Immagini.url FROM Destinazioni, Immagini, Acquisti WHERE Destinazioni.id = Immagini.id_dest_fk AND Acquisti.id_dest_fk = Destinazioni.id AND Acquisti.id_user_fk ='$userid'";
               }
