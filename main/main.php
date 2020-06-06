@@ -148,7 +148,7 @@
           ?>
         </div>
       </div>
-      <script src="https://www.openlayers.org/api/OpenLayers.js"></script>
+      <script src="/js/openlayers/ol.js"></script>
       <script>
           let lat = 45.5257;
           let lon = 10.2283;
