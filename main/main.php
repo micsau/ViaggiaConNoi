@@ -148,7 +148,7 @@
           ?>
         </div>
       </div>
-      <script src="/js/openlayers/ol.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/2.13.1/OpenLayers.js"></script>
       <script>
           let lat = 45.5257;
           let lon = 10.2283;
