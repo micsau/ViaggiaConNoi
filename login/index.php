@@ -69,6 +69,7 @@
               session_start();         //funzione di login.
               $username = $_POST["username"];
               $password = $_POST["password"];       //prendo da input lo username e la password.
+              $password = md5($password);
               if (!$username) {
                 echo("Inserisci un username per accedere!");
                 exit('<br><br><a class ="btn btn-primary" href="index.html">Ritorna Indietro </a>');

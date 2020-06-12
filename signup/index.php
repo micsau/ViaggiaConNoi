@@ -66,6 +66,7 @@
           <?php 
             $username = $_POST["username"];
             $password =$_POST["password"];
+            $password=md5($password);
             $email=$_POST["email"];
             $birthday=$_POST["birthday"];
             $birthplace=$_POST["birthplace"];
